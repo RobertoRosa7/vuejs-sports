@@ -10,3 +10,8 @@ source .venv/Script/activate
 ```
 pip install -r requirements.txt
 ```
+
+#### Rodar
+```
+python run.py
+```
