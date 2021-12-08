@@ -3,7 +3,7 @@
     <div class="background">
       <v-img class="image" :src="require('../assets/background.png')" />
     </div>
-    <v-main>
+    <v-main class="main">
       <div class="header">
         <div class="line">
           <div class="logo2">
@@ -130,6 +130,12 @@ export default {
   position: relative;
   overflow-x: hidden;
   background-color: #eee !important;
+}
+.main {
+  width: 100%;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .header {
   height: calc(100vh - 640px);

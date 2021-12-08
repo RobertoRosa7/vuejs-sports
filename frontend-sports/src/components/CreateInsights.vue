@@ -3,7 +3,7 @@
     <div class="background">
       <v-img class="image" :src="require('../assets/background.png')" />
     </div>
-    <v-main>
+    <v-main class="main">
       <div class="header">
         <v-btn class="btn" :to="'/'" icon>
           <v-icon style="color: #ED4D77">arrow_back</v-icon>
@@ -13,7 +13,7 @@
           <strong>Insight</strong>
         </p>
       </div>
-      <v-container class="container">
+      <div class="container">
         <v-card class="input-text">
           <div class="form-group">
             <span>Insight</span>
@@ -40,7 +40,7 @@
           </div>
           <v-divider></v-divider>
         </v-card>
-      </v-container>
+      </div>
     </v-main>
     <div class="actions">
       <v-btn @click="create(update)" class="btn">
@@ -96,6 +96,12 @@ export default {
 <style scoped>
 .create-insights {
   position: relative;
+}
+.main {
+  width: 100%;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .background {
   position: absolute;
