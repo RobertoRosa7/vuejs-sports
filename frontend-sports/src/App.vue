@@ -5,40 +5,11 @@
 </template>
 
 <script>
+
 export default {
   name: 'App',
   data: () => ({
-    image:
-      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
-    user: {
-      name: "Antônia",
-      email: "antonia.pina@g.globo",
-    },
-    cards: [
-      {
-        id: 1,
-        conteudo: 'Flamengo consegue boa vitória fora de casa na estréia da Copa Libertadores 2021',
-      },
-      {
-        id: 2,
-        conteudo: 'Primeira partida de um grupo difícil exigiu que o time carioca virasse o placar em dois momentos do jogo',
-      },
-      {
-        id: 3,
-        conteudo: 'O Flamengo não conseguia vencer um time na Argentina há mais de 40 anos',
-      },
-      {
-        id: 4,
-        conteudo: 'Arrascaeta fez a diferença e garantiu a vitória para o time rubro-negro.'
-      }
-    ]
   }),
-
-  methods: {
-    add() {
-      console.log('here');
-    }
-  }
 };
 </script>
 

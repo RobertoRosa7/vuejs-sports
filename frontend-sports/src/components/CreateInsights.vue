@@ -18,7 +18,7 @@
           <div class="form-group">
             <span>Insight</span>
             <textarea
-              v-model="insights.description"
+              v-model="insights.text"
               class="form-control"
               placeholder="Escreva aqui seu insight..."
               name
@@ -43,23 +43,52 @@
       </v-container>
     </v-main>
     <div class="actions">
-      <v-btn @click="create()" class="btn">
-        <span>publicar</span>
+      <v-btn @click="create(update)" class="btn">
+        <span v-if="!update">Publicar</span>
+        <span v-if="update">Atualizar</span>
       </v-btn>
     </div>
   </v-app>
 </template> 
 <script>
+
+import api from '../../axios';
+import * as datefns from 'date-fns';
+
 export default {
   name: "CreateInsights",
   data: () => ({
-    insights: {}
+    insights: {},
+    update: false
   }),
-  methods: {
-    create() {
-      const formSend = Object.assign({}, this.insights);
-      console.log({ insights: formSend });
+  created() {
+    if (this.$route.query.id) {
+      api.get(`/detail?id=${this.$route.query.id}`).then(({ data }) => {
+        this.insights = data.data;
+        this.update = true;
+      });
     }
+  },
+  methods: {
+    create(action) {
+      if (action) {
+        const formSend = { ...this.insights, date_modified: datefns.format(new Date(), 'yyyy.MM.dd') }
+        api.put(`/?id=${formSend.id}`, formSend).then(() => alert('Feed atualizado'));
+      } else {
+        const formSend = {
+          ...this.insights,
+          category: this.insights.category ? this.insights.category : '',
+          tags: '',
+          date_modified: datefns.format(new Date(), 'yyyy.MM.dd'),
+          date_create: datefns.format(new Date(), 'yyyy.MM.dd')
+        }
+        api.post('/', formSend).then(() => {
+          alert('Feed publicado.');
+          this.insights = {};
+          this.update = false;
+        });
+      }
+    },
   }
 };
 </script>

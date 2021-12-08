@@ -12,7 +12,7 @@
           <div class="user">
             <div class="section">
               <div class="image">
-                <v-img class="profile-img" :src="image" />
+                <v-img class="profile-img" :src="user.photo" />
               </div>
             </div>
           </div>
@@ -34,29 +34,42 @@
         </div>
       </div>
       <div class="cads">
-        <Card :card="card" v-for="card in cards" :key="card.id" />
+        <Card
+          @delete="onDelete($event)"
+          @detail="openDetail($event)"
+          :card="card"
+          v-for="card in cards"
+          :key="card.id"
+        />
       </div>
-      <v-container>
+      <v-container v-if="cards.length > 0">
         <div class="more-cards">
           <v-btn icon>
             <v-icon>more_horiz</v-icon>
           </v-btn>
           <span>Toque para exibir mais insights</span>
         </div>
-        <div class="card-search">
+        <form @submit.prevent="search" @reset="resetar" class="card-search">
           <v-card class="search">
-            <span>pesquise por termos ou categorias</span>
-            <v-btn icon>
+            <input
+              v-model="searchTerms"
+              type="text"
+              name
+              id
+              placeholder="pesquise por termos ou categorias"
+            />
+            <v-btn type="submit" icon>
               <v-icon>search</v-icon>
             </v-btn>
           </v-card>
-        </div>
+        </form>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import api from '../../axios';
 import Card from './Card.vue';
 
 export default {
@@ -65,35 +78,48 @@ export default {
     Card,
   },
   data: () => ({
-    image:
-      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
     user: {
       name: "Antônia",
       email: "antonia.pina@g.globo",
+      photo:
+        "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
     },
-    cards: [
-      {
-        id: 1,
-        conteudo: 'Flamengo consegue boa vitória fora de casa na estréia da Copa Libertadores 2021',
-      },
-      {
-        id: 2,
-        conteudo: 'Primeira partida de um grupo difícil exigiu que o time carioca virasse o placar em dois momentos do jogo',
-      },
-      {
-        id: 3,
-        conteudo: 'O Flamengo não conseguia vencer um time na Argentina há mais de 40 anos',
-      },
-      {
-        id: 4,
-        conteudo: 'Arrascaeta fez a diferença e garantiu a vitória para o time rubro-negro.'
-      }
-    ]
+    searchTerms: '',
+    cards: [],
+    filtered: []
   }),
-
+  created() {
+    api.get('/').then(({ data }) => {
+      this.cards = data.data;
+      this.filtered = data.data;
+    });
+    api.get('/user?id=01').then(({ data }) => this.user = data.data);
+  },
   methods: {
-    add() {
-      console.log('here');
+    resetar() {
+    },
+    search() {
+      if (this.searchTerms.length > 0) {
+        const cards = this.cards.filter(value => value.category.toLowerCase() === this.searchTerms.toLowerCase());
+        if (cards.length > 0) {
+          this.cards = cards;
+        }
+      } else {
+        this.cards = this.filtered;
+      }
+    },
+    openDetail(event) {
+      this.$router.push({ path: 'create', query: { id: event.id } });
+    },
+    onDelete(event) {
+      api.delete(`/?id=${event.id}`).then(() => {
+        alert('Feed excluído')
+        api.get('/').then(({ data }) => {
+          this.cards = data.data;
+          this.filtered = data.data;
+        });
+      });
+
     }
   }
 };
@@ -219,6 +245,19 @@ export default {
   padding: 8px;
 }
 .search span {
+  font-size: 0.8em;
+  font-family: "Exo 2";
+  font-style: italic;
+}
+.search input {
+  width: 100%;
+}
+.search input:focus,
+.search input:active {
+  border: none;
+  outline: none;
+}
+.search input::placeholder {
   font-size: 0.8em;
   font-family: "Exo 2";
   font-style: italic;

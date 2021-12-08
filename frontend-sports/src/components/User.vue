@@ -1,7 +1,7 @@
 <template>
   <div class="section">
     <div class="image">
-      <v-img class="profile-img" :src="image" />
+      <v-img class="profile-img" :src="user.photo" />
     </div>
     <p class="name">Olá {{ user.name }}!</p>
     <small class="email">{{ user.email }}</small>
@@ -9,16 +9,16 @@
 </template>
 
 <script>
+import api from '../../axios';
+
 export default {
   name: "User",
   data: () => ({
-    image:
-      "https://www.rd.com/wp-content/uploads/2017/09/01-shutterstock_476340928-Irina-Bg.jpg",
-    user: {
-      name: "Antônio",
-      email: "antonio.pina@g.globo",
-    },
+    user: {}
   }),
+  created() {
+    api.get('/user?id=01').then(({ data }) => this.user = data.data);
+  }
 };
 </script>
 
